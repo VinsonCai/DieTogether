@@ -96,6 +96,7 @@ public class GameView extends SurfaceView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mDrawingThread == null) {
+			mGame.startGame();
 			startDrawingThread();
 		} else {
 			mGame.onTouch(event);
@@ -120,11 +121,11 @@ public class GameView extends SurfaceView {
 				mGame.drawGame(canvas);
 				getHolder().unlockCanvasAndPost(canvas);
 
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					Thread.sleep(10);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
 			}
 
 		}

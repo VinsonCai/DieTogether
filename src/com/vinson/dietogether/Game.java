@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.vinson.dietogether.model.Block;
@@ -44,6 +43,10 @@ public class Game {
 		mHeight = height;
 	}
 
+	public void startGame() {
+		mBlocks.clear();
+	}
+
 	private void generateBlock() {
 		Block newBlock = new Block(mWidth, 100);
 		newBlock.setBlockListener(new BlockListener() {
@@ -74,7 +77,6 @@ public class Game {
 	private void checkConflick() {
 		for (Block block : mBlocks) {
 			if (mRunningMan.isConflickWith(block)) {
-				Log.e(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				fireOnGameOver();
 			}
 		}

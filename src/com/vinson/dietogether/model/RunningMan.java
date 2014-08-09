@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class RunningMan extends AbstractShape {
 
@@ -72,9 +71,6 @@ public class RunningMan extends AbstractShape {
 	public boolean isConflickWith(AbstractShape shape) {
 		Rect rect = getBounds();
 		Rect otherRect = shape.getBounds();
-
-		Log.v("Running Man",
-				"rect=" + rect + "====== other Rect=" + otherRect + "::::::" + Rect.intersects(rect, otherRect));
 
 		return Rect.intersects(rect, otherRect);
 	}
