@@ -7,16 +7,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.MotionEvent;
 
+import com.vinson.dietogether.events.GameEvent;
+import com.vinson.dietogether.events.GameScoreUpdateEvent;
 import com.vinson.dietogether.model.Block;
 import com.vinson.dietogether.model.Block.BlockListener;
 import com.vinson.dietogether.model.RunningMan;
+
+import de.greenrobot.event.EventBus;
 
 public class Game {
 
 	private static final String TAG = "Game";
 	private static final int MIN_BLOCK_INTERVAL = 50;
 	private static final int RANDOM_BLOCK_INTERVAL = 150;
-	private GameListener mGameListener;
 	private RunningMan mRunningMan;
 
 	private LinkedBlockingQueue<Block> mBlockingQueue = new LinkedBlockingQueue<Block>();
@@ -103,19 +106,15 @@ public class Game {
 		canvas.drawColor(Color.BLACK);
 	}
 
-	public void setGameListener(GameListener listener) {
-		mGameListener = listener;
-	}
-
 	private void fireOnGameOver() {
-		if (null != mGameListener) {
-			mGameListener.onGameOver();
-		}
+		GameEvent event = new GameEvent();
+		event.mEventType = GameEvent.TYPE_GAME_OVER;
+		EventBus.getDefault().post(event);
 	}
 
 	private void fireOnGameUpdate() {
-		if (null != mGameListener) {
-			mGameListener.onGameScoreUpdate(mScore);
-		}
+		GameScoreUpdateEvent event = new GameScoreUpdateEvent();
+		event.mScore = mScore;
+		EventBus.getDefault().post(event);
 	}
 }

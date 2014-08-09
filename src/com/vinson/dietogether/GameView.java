@@ -11,6 +11,8 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import com.vinson.dietogether.events.GameEvent;
+
 public class GameView extends SurfaceView {
 
 	private DrawingThread mDrawingThread;
@@ -57,25 +59,18 @@ public class GameView extends SurfaceView {
 		});
 
 		mGame = new Game();
+	}
 
-		mGame.setGameListener(new GameListener() {
+	public void onEventBackgroundThread(GameEvent event) {
+		switch (event.mEventType) {
+		case GameEvent.TYPE_GAME_OVER:
+			stopDrawingThread();
+			mHandler.sendEmptyMessage(0);
+			break;
 
-			@Override
-			public void onGameStarted() {
-
-			}
-
-			@Override
-			public void onGameScoreUpdate(int score) {
-
-			}
-
-			@Override
-			public void onGameOver() {
-				stopDrawingThread();
-				mHandler.sendEmptyMessage(0);
-			}
-		});
+		default:
+			break;
+		}
 	}
 
 	private void stopDrawingThread() {
