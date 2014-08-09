@@ -85,6 +85,6 @@ public class RunningMan extends AbstractShape {
 
 	@Override
 	protected Rect getBounds() {
-		return new Rect(mX, mY - mJumpHeight, mX + 20, mY - mJumpHeight - 20);
+		return new Rect(mX, mY - mJumpHeight - 20, mX + 20, mY - mJumpHeight);
 	}
 }

@@ -61,6 +61,6 @@ public class Block extends AbstractShape {
 
 	@Override
 	protected Rect getBounds() {
-		return new Rect(mX, mY, mX + mWidth, mY - mHeight);
+		return new Rect(mX, mY - mHeight, mX + mWidth, mY);
 	}
 }

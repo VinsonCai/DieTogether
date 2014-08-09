@@ -95,7 +95,11 @@ public class GameView extends SurfaceView {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		mGame.onTouch(event);
+		if (mDrawingThread == null) {
+			startDrawingThread();
+		} else {
+			mGame.onTouch(event);
+		}
 		return true;
 	}
 
