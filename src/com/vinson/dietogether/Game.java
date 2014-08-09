@@ -14,8 +14,8 @@ import com.vinson.dietogether.model.RunningMan;
 public class Game {
 
 	private static final String TAG = "Game";
-	private static final int GENERATE_INTERVAL = 150;
-	private static final int GENERATE_STEP = 5;
+	private static final int MIN_BLOCK_INTERVAL = 50;
+	private static final int RANDOM_BLOCK_INTERVAL = 150;
 	private GameListener mGameListener;
 	private RunningMan mRunningMan;
 
@@ -53,13 +53,10 @@ public class Game {
 	}
 
 	private void generateBlockIfNeed() {
-		mCount++;
-		if (mCount >= GENERATE_INTERVAL) {
-			int value = mRandom.nextInt();
-			if (value % GENERATE_STEP == 0) {
-				mCount = 0;
-				generateBlock();
-			}
+		--mCount;
+		if (mCount < 0) {
+			generateBlock();
+			mCount = MIN_BLOCK_INTERVAL + mRandom.nextInt(RANDOM_BLOCK_INTERVAL);
 		}
 	}
 
