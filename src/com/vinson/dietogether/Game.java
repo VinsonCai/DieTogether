@@ -25,6 +25,7 @@ public class Game {
 	private int mHeight;
 	private int mCount = 0;
 	private Random mRandom = new Random();
+	private int mScore = 0;
 
 	public Game() {
 		mRunningMan = new RunningMan(100, 100);
@@ -50,6 +51,7 @@ public class Game {
 
 	public void startGame() {
 		mBlockingQueue.clear();
+		mScore = 0;
 	}
 
 	private void generateBlockIfNeed() {
@@ -85,6 +87,8 @@ public class Game {
 
 		generateBlockIfNeed();
 
+		mScore += 2;
+		fireOnGameUpdate();
 	}
 
 	private void checkConflick() {
@@ -109,4 +113,9 @@ public class Game {
 		}
 	}
 
+	private void fireOnGameUpdate() {
+		if (null != mGameListener) {
+			mGameListener.onGameScoreUpdate(mScore);
+		}
+	}
 }

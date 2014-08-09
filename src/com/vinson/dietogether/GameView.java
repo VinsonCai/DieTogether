@@ -53,8 +53,6 @@ public class GameView extends SurfaceView {
 			@Override
 			public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 				mGame.setScreenSize(width, height);
-				stopDrawingThread();
-				startDrawingThread();
 			}
 		});
 
@@ -87,6 +85,13 @@ public class GameView extends SurfaceView {
 		}
 	}
 
+	public void startGame() {
+		if (null == mDrawingThread) {
+			mGame.startGame();
+			startDrawingThread();
+		}
+	}
+
 	private void startDrawingThread() {
 		mDrawingThread = new DrawingThread();
 		mDrawingThread.start();
@@ -95,12 +100,7 @@ public class GameView extends SurfaceView {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (mDrawingThread == null) {
-			mGame.startGame();
-			startDrawingThread();
-		} else {
-			mGame.onTouch(event);
-		}
+		mGame.onTouch(event);
 		return true;
 	}
 
