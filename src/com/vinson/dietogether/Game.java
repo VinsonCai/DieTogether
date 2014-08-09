@@ -1,6 +1,7 @@
 package com.vinson.dietogether;
 
-import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,15 +14,19 @@ import com.vinson.dietogether.model.RunningMan;
 public class Game {
 
 	private static final String TAG = "Game";
+	private static final int GENERATE_INTERVAL = 150;
+	private static final int GENERATE_STEP = 5;
 	private GameListener mGameListener;
 	private RunningMan mRunningMan;
-	private ArrayList<Block> mBlocks;
+
+	private LinkedBlockingQueue<Block> mBlockingQueue = new LinkedBlockingQueue<Block>();
 
 	private int mWidth;
 	private int mHeight;
+	private int mCount = 0;
+	private Random mRandom = new Random();
 
 	public Game() {
-		mBlocks = new ArrayList<Block>();
 		mRunningMan = new RunningMan(100, 100);
 
 	}
@@ -44,7 +49,18 @@ public class Game {
 	}
 
 	public void startGame() {
-		mBlocks.clear();
+		mBlockingQueue.clear();
+	}
+
+	private void generateBlockIfNeed() {
+		mCount++;
+		if (mCount >= GENERATE_INTERVAL) {
+			int value = mRandom.nextInt();
+			if (value % GENERATE_STEP == 0) {
+				mCount = 0;
+				generateBlock();
+			}
+		}
 	}
 
 	private void generateBlock() {
@@ -53,29 +69,29 @@ public class Game {
 
 			@Override
 			public void onOutOfScreen(Block block) {
-				mBlocks.remove(block);
+
+				mBlockingQueue.remove(block);
 			}
 		});
-		mBlocks.add(newBlock);
+		mBlockingQueue.add(newBlock);
 	}
 
 	public void drawGame(Canvas canvas) {
 		drawBackground(canvas);
 		mRunningMan.drawSelf(canvas);
 
-		for (Block block : mBlocks) {
+		for (Block block : mBlockingQueue) {
 			block.drawSelf(canvas);
 		}
 
-		if (mBlocks.size() < 1) {
-			generateBlock();
-		}
-
 		checkConflick();
+
+		generateBlockIfNeed();
+
 	}
 
 	private void checkConflick() {
-		for (Block block : mBlocks) {
+		for (Block block : mBlockingQueue) {
 			if (mRunningMan.isConflickWith(block)) {
 				fireOnGameOver();
 			}
