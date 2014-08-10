@@ -66,7 +66,7 @@ public class Game {
 	}
 
 	private void generateBlock() {
-		Block newBlock = new Block(mWidth, 100);
+		Block newBlock = new Block(1024, 100);
 		newBlock.setBlockListener(new BlockListener() {
 
 			@Override

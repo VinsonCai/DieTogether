@@ -3,17 +3,16 @@ package com.vinson.dietogether;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
+import android.view.TextureView;
 
 import com.vinson.dietogether.events.FPSEvent;
 
 import de.greenrobot.event.EventBus;
 
-public class GameView extends SurfaceView {
+public class GameView extends TextureView {
 
 	private DrawingThread mDrawingThread;
 	private Game mGame;
@@ -34,26 +33,54 @@ public class GameView extends SurfaceView {
 	}
 
 	private void init() {
-		getHolder().addCallback(new Callback() {
+		mGame = new Game();
+		setSurfaceTextureListener(new SurfaceTextureListener() {
 
 			@Override
-			public void surfaceDestroyed(SurfaceHolder holder) {
-				stopDrawingThread();
-			}
-
-			@Override
-			public void surfaceCreated(SurfaceHolder holder) {
+			public void onSurfaceTextureUpdated(SurfaceTexture texture) {
 
 			}
 
 			@Override
-			public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+			public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
 				mGame.setScreenSize(width, height);
 			}
-		});
 
-		mGame = new Game();
+			@Override
+			public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
+				stopDrawingThread();
+				return true;
+			}
+
+			@Override
+			public void onSurfaceTextureAvailable(SurfaceTexture texture, int arg1, int arg2) {
+
+			}
+		});
 	}
+
+//
+//	private void init() {
+//		getHolder().addCallback(new Callback() {
+//
+//			@Override
+//			public void surfaceDestroyed(SurfaceHolder holder) {
+//				stopDrawingThread();
+//			}
+//
+//			@Override
+//			public void surfaceCreated(SurfaceHolder holder) {
+//
+//			}
+//
+//			@Override
+//			public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//				mGame.setScreenSize(width, height);
+//			}
+//		});
+//
+//		mGame = new Game();
+//	}
 
 	public void stopGame() {
 		stopDrawingThread();
@@ -97,13 +124,23 @@ public class GameView extends SurfaceView {
 			mIsRunning = true;
 			mCurrentThread = Thread.currentThread();
 			FPSEvent event = new FPSEvent();
-			SurfaceHolder holder = getHolder();
+//			SurfaceHolder holder = getHolder();
 			long start = System.currentTimeMillis();
 			while (mIsRunning) {
 				++fpsCount;
-				Canvas canvas = holder.lockCanvas();
+				long beforeLock = System.currentTimeMillis();
+				Canvas canvas = lockCanvas();
 				mGame.drawGame(canvas);
-				holder.unlockCanvasAndPost(canvas);
+				unlockCanvasAndPost(canvas);
+//				long sleepFor = System.currentTimeMillis() - beforeLock;
+//				sleepFor = 16 - sleepFor;
+//				if (sleepFor > 0) {
+//					try {
+//						Thread.sleep(sleepFor);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//				}
 				long end = System.currentTimeMillis();
 				if (end - start > 1000) {
 					start = end;
