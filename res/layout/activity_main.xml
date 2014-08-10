@@ -21,6 +21,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start"/>
+         <TextView 
+            android:id="@+id/fps_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
 <com.vinson.dietogether.GameView

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vinson.dietogether.events.FPSEvent;
 import com.vinson.dietogether.events.GameEvent;
 import com.vinson.dietogether.events.GameScoreUpdateEvent;
 
@@ -18,6 +19,7 @@ public class MainActivity extends Activity {
 	private GameView mGameView;
 	private Button mStartButton;
 	private TextView mScoreTextView;
+	private TextView mFpsTextView;
 
 	private boolean mGameStarted = false;
 
@@ -51,6 +53,9 @@ public class MainActivity extends Activity {
 
 		mScoreTextView = (TextView) findViewById(R.id.scrore_textView);
 		mScoreTextView.setText(getString(R.string.score, 0));
+
+		mFpsTextView = (TextView) findViewById(R.id.fps_textView);
+		mFpsTextView.setText(getString(R.string.FPS, 0));
 	}
 
 	private void onGameOver() {
@@ -66,6 +71,10 @@ public class MainActivity extends Activity {
 
 	public void onEventMainThread(GameScoreUpdateEvent event) {
 		mScoreTextView.setText(getString(R.string.score, event.mScore));
+	}
+
+	public void onEventMainThread(FPSEvent event) {
+		mFpsTextView.setText(getString(R.string.FPS, event.mFps));
 	}
 
 	@Override

@@ -9,6 +9,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
+import com.vinson.dietogether.events.FPSEvent;
+
+import de.greenrobot.event.EventBus;
+
 public class GameView extends SurfaceView {
 
 	private DrawingThread mDrawingThread;
@@ -89,15 +93,24 @@ public class GameView extends SurfaceView {
 		@Override
 		public void run() {
 			super.run();
-
+			int fpsCount = 0;
 			mIsRunning = true;
 			mCurrentThread = Thread.currentThread();
-
+			FPSEvent event = new FPSEvent();
+			SurfaceHolder holder = getHolder();
+			long start = System.currentTimeMillis();
 			while (mIsRunning) {
-				Canvas canvas = getHolder().lockCanvas();
+				++fpsCount;
+				Canvas canvas = holder.lockCanvas();
 				mGame.drawGame(canvas);
-				getHolder().unlockCanvasAndPost(canvas);
-
+				holder.unlockCanvasAndPost(canvas);
+				long end = System.currentTimeMillis();
+				if (end - start > 1000) {
+					start = end;
+					event.mFps = fpsCount;
+					fpsCount = 0;
+					EventBus.getDefault().post(event);
+				}
 			}
 
 		}
