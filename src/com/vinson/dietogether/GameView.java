@@ -3,25 +3,15 @@ package com.vinson.dietogether;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import android.widget.Toast;
-
-import com.vinson.dietogether.events.GameEvent;
 
 public class GameView extends SurfaceView {
 
 	private DrawingThread mDrawingThread;
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			Toast.makeText(getContext(), "Game Over!!!", Toast.LENGTH_LONG).show();
-		}
-	};
 	private Game mGame;
 
 	public GameView(Context context, AttributeSet attrs, int defStyle) {
@@ -61,16 +51,8 @@ public class GameView extends SurfaceView {
 		mGame = new Game();
 	}
 
-	public void onEventBackgroundThread(GameEvent event) {
-		switch (event.mEventType) {
-		case GameEvent.TYPE_GAME_OVER:
-			stopDrawingThread();
-			mHandler.sendEmptyMessage(0);
-			break;
-
-		default:
-			break;
-		}
+	public void stopGame() {
+		stopDrawingThread();
 	}
 
 	private void stopDrawingThread() {
@@ -116,11 +98,6 @@ public class GameView extends SurfaceView {
 				mGame.drawGame(canvas);
 				getHolder().unlockCanvasAndPost(canvas);
 
-//				try {
-//					Thread.sleep(10);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
 			}
 
 		}
